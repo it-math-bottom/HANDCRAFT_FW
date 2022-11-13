@@ -36,7 +36,7 @@ public class MyContext {
 			final Class<?> type = TYPES_MAP.get(key);
 			Objects.requireNonNull(type, name + " not found.");
 			try {
-				return type.newInstance();
+				return createObject(type);
 			} catch (InstantiationException | IllegalAccessException ex) {
 				throw new RuntimeException(name + " cannot instanciate", ex);
 			}
@@ -44,5 +44,12 @@ public class MyContext {
 		
 		// Beanの取得 or （生成 → 登録 → 取得）
 		return BEANS_MAP.computeIfAbsent(name, mappingFunction);
+	}
+
+	private static <T> T createObject(Class<T> type)
+			throws InstantiationException, IllegalAccessException
+	{
+		final T obj = type.newInstance();
+		return obj;
 	}
 }
