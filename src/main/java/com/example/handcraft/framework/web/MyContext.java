@@ -7,8 +7,8 @@ import java.util.function.Function;
 
 public class MyContext {
 
-	private static Map<String, Class<?>> TYPES_MAP = new HashMap<String, Class<?>>();
-	private static Map<String, Object>   BEANS_MAP = new HashMap<String, Object>();
+	private static final Map<String, Class<?>> TYPES_MAP = new HashMap<String, Class<?>>();
+	private static final Map<String, Object>   BEANS_MAP = new HashMap<String, Object>();
 	
 	/**
 	 * コンテナへの登録を行う。
@@ -32,8 +32,8 @@ public class MyContext {
 	 */
 	public static Object getBean(final String name) {
 		// Beanインスタンス未生成時の生成ロジック
-		Function<String, Object> mappingFunction = key -> {
-			Class<?> type = TYPES_MAP.get(key);
+		final Function<String, Object> mappingFunction = key -> {
+			final Class<?> type = TYPES_MAP.get(key);
 			Objects.requireNonNull(type, name + " not found.");
 			try {
 				return type.newInstance();
