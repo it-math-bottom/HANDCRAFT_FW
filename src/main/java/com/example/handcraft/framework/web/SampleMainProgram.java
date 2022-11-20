@@ -7,10 +7,10 @@ public class SampleMainProgram {
 
 	public static void main(String[] args) {
 		
-		MyContext.registerType("fooBean", FooBean.class);
-		MyContext.registerType("barBean", BarBean.class);
+		MyContext.registerType(FooBean.class.getName(), FooBean.class);
+		MyContext.registerType(BarBean.class.getName(), BarBean.class);
 		
-		BarBean bar = (BarBean) MyContext.getBean("barBean");
+		BarBean bar = (BarBean) MyContext.getBean(BarBean.class.getName());
 		bar.showMyName();
 		
 	}

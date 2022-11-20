@@ -71,7 +71,7 @@ public class MyContext {
 			}
 			
 			field.setAccessible(true);
-			field.set(obj, getBean(field.getName()));
+			field.set(obj, getBean(field.getClass().getName()));
 		}
 		
 		return obj;
