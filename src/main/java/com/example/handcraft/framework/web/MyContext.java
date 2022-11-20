@@ -1,9 +1,12 @@
 package com.example.handcraft.framework.web;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
+
+import com.example.handcraft.framework.web.annotation.MyAutowire;
 
 public class MyContext {
 
@@ -46,10 +49,31 @@ public class MyContext {
 		return BEANS_MAP.computeIfAbsent(name, mappingFunction);
 	}
 
-	private static <T> T createObject(Class<T> type)
+	/**
+	 * Beanインスタンス未生成時に呼び出されるオブジェクト生成処理
+	 * 
+	 * @param <T>
+	 * @param type
+	 * @return
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 */
+	private static <T> T createObject(final Class<T> type)
 			throws InstantiationException, IllegalAccessException
 	{
 		final T obj = type.newInstance();
+		
+		// 対象クラスのフィールドを走査し、MyAutowireアノテーションが付与されているか否かを調べる
+		// 付与されていれば、フィールドのBeanを取得し、値セットする
+		for (Field field : type.getDeclaredFields()) {
+			if (!field.isAnnotationPresent(MyAutowire.class)) {
+				continue;
+			}
+			
+			field.setAccessible(true);
+			field.set(obj, getBean(field.getName()));
+		}
+		
 		return obj;
 	}
 }
